@@ -1,0 +1,26 @@
+{
+  "company": "E DATA ELEKTRONİK \nSAN.VE TİC. A.Ş.",
+  "address": "BOSNA BULVARI NO:148\nPROFİLO PLAZA ÇENGELKÖY\n34688 ÜSKÜDAR/İSTANBUL",
+  "phone": "02164613110",
+  "tax_office": "ÜSKÜDAR VD: 7280125904",
+  "mersis_no": "4336555644343434",
+  "epdk": "31464444655444",
+  "ada_no": "1/2/3/4",
+  "date": "2025-07-25",
+"time":"11:39",
+  "receipt_no": "0003",
+  "plaka": "34 AB 1987",
+  "product": {
+    "quantity": "17.00 LT",
+    "unit_price": 19.77,
+    "name": "GAZYAĞI",
+    "vat": "20",
+    "vat2": "56.02",
+    "total": "336.09",
+    "payment_method": "336.09",
+    "paid_amount": "336.09"
+  },
+  "eku_no": "0001",
+  "z_no": "0066",
+  "bck": "00000028"
+}
