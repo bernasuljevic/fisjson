@@ -11,19 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-# List only source (.cpp) files here
 set(PROJECT_SOURCES
     main.cpp
-    mainwindow.cpp
+   printwidget.cpp
 )
 
-# This processes the .ui file and generates ui_mainwindow.h
-qt6_wrap_ui(UI_HEADERS ui/mainwindow.ui)
-
 add_executable(fisjson
-    ${PROJECT_SOURCES}
-    ${UI_HEADERS}
-    mainwindow.h mainwindow.ui
+   main.cpp
+   printwidget.cpp
 )
 
 target_link_libraries(fisjson PRIVATE Qt6::Widgets)
