@@ -7,13 +7,13 @@
 #include <QFontMetrics>
 #include <QDir>
 
-// Virgüllü sayı formatı için yardımcı fonksiyon
+
 QString toCommaNumber(double number) {
     QString str = QString::number(number, 'f', 2);
     return str.replace('.', ',');
 }
 
-// Satırda solda ve sağda metin çizmek için
+
 void drawSeparatedLine(QPainter &painter, int &y, const QString &left, const QString &right, int width) {
     QFontMetrics metrics(painter.font());
     int padding = 10;
@@ -23,14 +23,13 @@ void drawSeparatedLine(QPainter &painter, int &y, const QString &left, const QSt
     y += metrics.height() + 5;
 }
 
-// Yapıcı fonksiyon
+
 PrintWidget::PrintWidget(QWidget *parent)
     : QWidget(parent)
 {
     setMinimumSize(400, 300);
 }
 
-// Paint işlemi
 void PrintWidget::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -39,7 +38,7 @@ void PrintWidget::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing);
     QFont font("Arial", 12);
     painter.setFont(font);
-    painter.setPen(QColorConstants::Svg::purple);
+    painter.setPen(QColorConstants::Svg::white);
 
     QFile file("veri.json");
     if (!file.open(QIODevice::ReadOnly)) {
@@ -60,7 +59,9 @@ void PrintWidget::paintEvent(QPaintEvent *event)
     QJsonObject obj = doc.object();
 
     QString company = obj.value("company").toString();
+    auto company_lines = company.split("\n");
     QString address = obj.value("address").toString();
+    auto address_lines = address.split("\n");
     QString phone = obj.value("phone").toString();
     QString taxOffice = obj.value("tax_office").toString();
     QString mersisNo = obj.value("mersis_no").toString();
@@ -93,15 +94,25 @@ void PrintWidget::paintEvent(QPaintEvent *event)
         y += metrics.height() + 5;
     };
 
-    drawCentered(company);
-    drawCentered(address);
+
+
+    for(const auto& company_line : company_lines){
+        drawCentered(company_line);
+    }
+
+
+    for(const auto& address_line : address_lines){
+        drawCentered(address_line);
+    }
     drawCentered("Tel: " + phone);
     drawCentered(taxOffice);
     drawCentered("MERSIS NO: " + mersisNo);
     drawCentered("EPDK: " + epdk);
     drawCentered("ADA NO: " + adaNo);
     drawSeparatedLine(painter, y, date, time, w);
-    drawSeparatedLine(painter, y, "FİŞ NO:", receiptNo, w);
+    QString text = QString("FİŞ NO: %1").arg(receiptNo);
+    painter.drawText(10, y, text);
+    y += 20;
 
     font.setPointSize(16);
     font.setBold(true);
@@ -113,12 +124,30 @@ void PrintWidget::paintEvent(QPaintEvent *event)
     metrics = QFontMetrics(painter.font());
     y += 5;
     drawSeparatedLine(painter, y, quantity + " x " + unitPrice, "", w);
-    drawSeparatedLine(painter, y, name, "", w);
-    drawSeparatedLine(painter, y, "%", vat, w);
+    QString rightText = "%" + vat + " *" + total;
+    painter.drawText(10, y, name);
+    painter.drawText(w - metrics.horizontalAdvance(rightText) - 10, y, rightText);
+    y += 20;
     drawCentered(QString(w, '-'));
-    drawSeparatedLine(painter, y, "KDV", vat2Str, w);
-    drawSeparatedLine(painter, y, "TOPLAM:", total, w);
-    drawSeparatedLine(painter, y, "NAKİT", payment, w);
+    QString kdvLabel = "KDV";
+    QString kdvValue = "*" + vat2Str;
+    painter.drawText(10, y, kdvLabel);
+    painter.drawText(w - metrics.horizontalAdvance(kdvValue) - 10, y, kdvValue);
+    y += 20;
+
+
+    QString totalLabel = "TOPLAM:";
+    QString totalValue = "*" + total;
+    painter.drawText(10, y, totalLabel);
+    painter.drawText(w - metrics.horizontalAdvance(totalValue) - 10, y, totalValue);
+    y += 20;
+
+
+    QString paymentLabel = "NAKİT";
+    QString paymentValue = "*" + payment;
+    painter.drawText(10, y, paymentLabel);
+    painter.drawText(w - metrics.horizontalAdvance(paymentValue) - 10, y, paymentValue);
+    y += 20;
 
     drawSeparatedLine(painter, y, "EKÜ NO: " + eku_no, "Z NO: " + zno, w);
     drawCentered("BCK " + bck);
